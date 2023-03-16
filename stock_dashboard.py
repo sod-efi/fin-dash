@@ -1,3 +1,6 @@
+import os
+os.environ['NUMEXPR_NUM_THREADS'] = '1'
+
 import streamlit as st
 import yfinance as yf
 import pandas as pd
