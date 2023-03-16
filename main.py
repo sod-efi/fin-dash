@@ -61,3 +61,5 @@ if st.button("Show Dashboard"):
             st.pyplot(fig)
         except Exception as e:
             st.error(f"Error fetching data for {stock}: {str(e)}")
+
+# https://site.financialmodelingprep.com/developer/docs/api-keys
