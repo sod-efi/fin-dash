@@ -1,28 +1,36 @@
 import streamlit as st
-import pandas as pd
 import yfinance as yf
-import plotly.graph_objs as go
+import pandas as pd
+import matplotlib.pyplot as plt
 
-def main():
-    symbols = symbol_list.strip().split('\n')
-    data = yf.download(symbols, start='2010-01-01', end='2022-01-01')
-    market_cap = data['Close'].resample('Q').last() * data['Shares Outstanding'].resample('Q').last()
-    total_assets = data['Total Assets'].resample('Q').last()
-    ratio = market_cap / total_assets
+def get_market_cap_to_assets_ratio(stock, start_date, end_date):
+    df = yf.download(stock, start=start_date, end=end_date, progress=False, auto_adjust=True)
+    df['Market Cap'] = df['Close'] * df['Volume']
+    df['Total Assets'] = df['Market Cap'] / 1.5  # You need to replace this with a real API to fetch the total assets
+    df['MC/TA Ratio'] = df['Market Cap'] / df['Total Assets']
+    df = df.resample('Q').mean()
+    return df['MC/TA Ratio']
 
-    for symbol in symbols:
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=ratio.index, y=ratio[symbol], name=symbol))
-        fig.update_layout(title=f'{symbol} Market Cap/Total Assets Ratio', xaxis_title='Quarter', yaxis_title='Market Cap/Total Assets Ratio')
-        st.plotly_chart(fig)
+st.title("Stock Dashboard: Market Cap / Total Assets Ratio")
 
-st.set_page_config(page_title='Stock Ratios Dashboard')
-st.title('Stock Ratios Dashboard')
-symbol_list = st.sidebar.text_area('Enter stock symbols (one per line)', height=500)
-if symbol_list:
-    main()
-else:
-    st.warning('Please enter at least one stock symbol.')
+stock_input = st.text_area("Enter a list of up to 100 stock symbols separated by commas:", max_chars=1000)
+stocks = [s.strip() for s in stock_input.split(',') if s.strip()]
 
-    
-    
+start_date = st.date_input("Start date", value=pd.to_datetime("2010-01-01"))
+end_date = st.date_input("End date", value=pd.to_datetime("today"))
+
+if st.button("Show Dashboard"):
+    if len(stocks) > 100:
+        st.warning("Please enter a maximum of 100 stock symbols.")
+    else:
+        for stock in stocks:
+            st.subheader(f"{stock} Market Cap / Total Assets Ratio")
+            try:
+                mc_ta_ratio = get_market_cap_to_assets_ratio(stock, start_date, end_date)
+                plt.figure(figsize=(10, 5))
+                plt.plot(mc_ta_ratio)
+                plt.xlabel("Date")
+                plt.ylabel("MC/TA Ratio")
+                st.pyplot(plt)
+            except Exception as e:
+                st.error(f"Error fetching data for {stock}: {e}")
