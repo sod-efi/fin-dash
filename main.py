@@ -45,7 +45,7 @@ start_date = st.date_input("Start date", value=pd.to_datetime("2010-01-01"))
 end_date = st.date_input("End date", value=pd.to_datetime("today"))
 
 
-api_key = st.text_input("Enter your API Key:", type="password")
+api_key = "d24086a7252e0ce8946a897be9845c8e"
 
 if st.button("Show Dashboard"):
     for stock in stocks:
