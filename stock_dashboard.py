@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import requests
 
 def get_financial_data(stock, api_key):
-    url = f"https://financialmodelingprep.com/api/v3/profile/{stock}?apikey={d24086a7252e0ce8946a897be9845c8e}"
+    url = f"https://financialmodelingprep.com/api/v3/profile/{stock}?apikey={api_key}"
     response = requests.get(url)
     data = response.json()
     if data:
@@ -25,7 +25,7 @@ def get_market_cap_to_assets_ratio(stock, start_date, end_date, api_key):
 
 st.title("Stock Market Cap / Total Assets Ratio Dashboard")
 
-api_key = st.text_input("Enter your Financial Modeling Prep API Key:", type="password")
+api_key = st.text_input("d24086a7252e0ce8946a897be9845c8e", type="password")
 
 stocks = st.text_input("Enter up to 100 stock symbols separated by commas:", "AAPL,MSFT,GOOG")
 stocks = stocks.split(',')
