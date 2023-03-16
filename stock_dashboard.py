@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 def get_market_cap_to_assets_ratio(stock, start_date, end_date):
     df = yf.download(stock, start=start_date, end=end_date, progress=False, auto_adjust=True)
-     if not hasattr(df.index, 'tz_localize'):
+    if not hasattr(df.index, 'tz_localize'):
         df.index = pd.to_datetime(df.index, utc=True)
     df['Market Cap'] = df['Close'] * df['Volume']
     df['Total Assets'] = df['Market Cap'] / 1.5  # You need to replace this with a real API to fetch the total assets
