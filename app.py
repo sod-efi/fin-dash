@@ -23,3 +23,6 @@ if symbol_list:
     main()
 else:
     st.warning('Please enter at least one stock symbol.')
+
+    
+    
